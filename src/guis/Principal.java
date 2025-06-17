@@ -62,6 +62,7 @@ public class Principal extends JFrame implements ActionListener {
 		menuBar.add(mnNewMenu);
 		
 		mntmNewMenuItem = new JMenuItem("Cerrar");
+		mntmNewMenuItem.addActionListener(this);
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		mnNewMenu_1 = new JMenu("Clientes");
@@ -94,6 +95,9 @@ public class Principal extends JFrame implements ActionListener {
 
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmNewMenuItem) {
+			actionPerformedMntmNewMenuItem(e);
+		}
 		if (e.getSource() == mntmNewMenuItem_1) {
 			actionPerformedMntmNewMenuItem_1(e);
 		}
@@ -102,5 +106,8 @@ public class Principal extends JFrame implements ActionListener {
 		RegistroClientes rc = new RegistroClientes();
 		rc.setVisible(true);
 
+	}
+	protected void actionPerformedMntmNewMenuItem(ActionEvent e) {
+		System.exit(0);
 	}
 }
