@@ -1,5 +1,5 @@
-EFSRT I
-Integrantes:
+EFSRT I\n
+Integrantes:\n
 Eder Romani Rua
 Fatima Brigit Campos Acosta
 Segundo Andres Chiroque Mezones
