@@ -27,6 +27,8 @@ public class Principal extends JFrame implements ActionListener {
 	private JMenuItem mntmNewMenuItem;
 	private JMenuItem mntmNewMenuItem_1;
 	private JLabel lblNewLabel;
+	private JMenuItem mntmNewMenuItem_3;
+	private JMenuItem mntmNewMenuItem_2;
 
 	/**
 	 * Launch the application.
@@ -77,9 +79,17 @@ public class Principal extends JFrame implements ActionListener {
 		mnNewMenu_3.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		menuBar.add(mnNewMenu_3);
 		
+		mntmNewMenuItem_3 = new JMenuItem("Pendientes");
+		mntmNewMenuItem_3.addActionListener(this);
+		mnNewMenu_3.add(mntmNewMenuItem_3);
+		
 		mnNewMenu_2 = new JMenu("Servicios atendidos");
 		mnNewMenu_2.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		menuBar.add(mnNewMenu_2);
+		
+		mntmNewMenuItem_2 = new JMenuItem("Atendidos");
+		mntmNewMenuItem_2.addActionListener(this);
+		mnNewMenu_2.add(mntmNewMenuItem_2);
 		getContentPane().setLayout(null);
 		
 		ImageIcon servisComputer = new ImageIcon(Principal.class.getResource("/sources/Servis.png"));
@@ -88,7 +98,7 @@ public class Principal extends JFrame implements ActionListener {
 		lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(servisRedimencionado);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(0, 0, 784, 437);
+		lblNewLabel.setBounds(0, 37, 784, 400);
 		getContentPane().add(lblNewLabel);
 		
 
@@ -101,9 +111,25 @@ public class Principal extends JFrame implements ActionListener {
 		if (e.getSource() == mntmNewMenuItem_1) {
 			actionPerformedMntmNewMenuItem_1(e);
 		}
+		if (e.getSource() == mntmNewMenuItem_2) {
+			actionPerformedMntmNewMenuItem_2(e);
+		}
+		if (e.getSource() == mntmNewMenuItem_3) {
+			actionPerformedMntmNewMenuItem_3(e);
+		}
 	}
 	protected void actionPerformedMntmNewMenuItem_1(ActionEvent e) {
 		RegistroClientes rc = new RegistroClientes();
+		rc.setVisible(true);
+
+	}
+	protected void actionPerformedMntmNewMenuItem_2(ActionEvent e) {
+		ServicioDeClientesAtendidos rc = new ServicioDeClientesAtendidos();
+		rc.setVisible(true);
+
+	}
+	protected void actionPerformedMntmNewMenuItem_3(ActionEvent e) {
+		ServicioDeClientePendientes rc = new ServicioDeClientePendientes();
 		rc.setVisible(true);
 
 	}

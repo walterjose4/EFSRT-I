@@ -8,14 +8,26 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Image;
 import javax.swing.JTextField;
+
+
+import arreglo.ArregloClientes;
+import clases.ClaseRegistro;
+
+//import clases.ClaseRegistro;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.awt.event.ActionEvent;
 
-public class RegistroClientes extends JFrame {
+public class RegistroClientes extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String String = null;
 	private JLabel lblTituloForm;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
@@ -28,17 +40,19 @@ public class RegistroClientes extends JFrame {
 	private JLabel lblNewLabel_9;
 	private JLabel lblNewLabel_7;
 	private JLabel lblNewLabel_10;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
+	private JTextField txtNombreCompleto;
+	private JTextField txtDni;
+	private JTextField txtTelefono;
+	private JTextField txtCorreo;
+	private JTextField txtNumSerie;
+	private JTextField txtFechaIngreso;
+	private JTextField txtFechaEntrega;
 	private JComboBox<String> cmbTipoDeEquipo;
 	private JComboBox<String> cmbMarca;
 	private JButton btnRegistrar;
-
+	private JLabel lblNewLabel_11;
+	private JTextField txtPrecio;
+	private ServicioDeClientePendientes scp = new ServicioDeClientePendientes();
 	/**
 	 * Launch the application.
 	 */
@@ -63,8 +77,7 @@ public class RegistroClientes extends JFrame {
 		getContentPane().setForeground(Color.WHITE);
 		getContentPane().setFont(new Font("Tahoma", Font.BOLD, 12));
 		setTitle("Registro");
-		setBounds(100, 100, 800, 512);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 800, 527);
 		getContentPane().setLayout(null);
 		
 		//Icono formulario
@@ -132,40 +145,42 @@ public class RegistroClientes extends JFrame {
 		lblNewLabel_10.setBounds(45, 251, 175, 14);
 		getContentPane().add(lblNewLabel_10);
 		
-		textField = new JTextField();
-		textField.setBounds(175, 162, 175, 26);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		txtNombreCompleto = new JTextField();
+		txtNombreCompleto.setBounds(175, 162, 175, 26);
+		getContentPane().add(txtNombreCompleto);
+		txtNombreCompleto.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(175, 127, 175, 26);
-		getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		txtDni = new JTextField();
+		txtDni.setBounds(175, 127, 175, 26);
+		getContentPane().add(txtDni);
+		txtDni.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(515, 127, 175, 26);
-		getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		txtTelefono = new JTextField();
+		txtTelefono.setBounds(515, 127, 175, 26);
+		getContentPane().add(txtTelefono);
+		txtTelefono.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(515, 165, 175, 26);
-		getContentPane().add(textField_3);
-		textField_3.setColumns(10);
+		txtCorreo = new JTextField();
+		txtCorreo.setBounds(515, 165, 175, 26);
+		getContentPane().add(txtCorreo);
+		txtCorreo.setColumns(10);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(175, 373, 175, 26);
-		getContentPane().add(textField_4);
-		textField_4.setColumns(10);
+		txtNumSerie = new JTextField();
+		txtNumSerie.setBounds(175, 373, 175, 26);
+		getContentPane().add(txtNumSerie);
+		txtNumSerie.setColumns(10);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(515, 286, 175, 26);
-		getContentPane().add(textField_5);
-		textField_5.setColumns(10);
+		txtFechaIngreso = new JTextField();
+		txtFechaIngreso.setEditable(false);
+		txtFechaIngreso.setBounds(515, 286, 175, 26);
+		txtFechaIngreso.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+		getContentPane().add(txtFechaIngreso);
+		txtFechaIngreso.setColumns(10);
 		
-		textField_6 = new JTextField();
-		textField_6.setBounds(515, 330, 175, 26);
-		getContentPane().add(textField_6);
-		textField_6.setColumns(10);
+		txtFechaEntrega = new JTextField();
+		txtFechaEntrega.setBounds(515, 330, 175, 26);
+		getContentPane().add(txtFechaEntrega);
+		txtFechaEntrega.setColumns(10);
 		
 		cmbTipoDeEquipo = new JComboBox<String>();
 		cmbTipoDeEquipo.setModel(new DefaultComboBoxModel<String>(new String[] {"Laptop", "Computadora de escritorio"}));
@@ -180,13 +195,112 @@ public class RegistroClientes extends JFrame {
 		getContentPane().add(cmbMarca);
 		
 		btnRegistrar = new JButton("REGISTRAR");
-		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnRegistrar.setBounds(515, 371, 110, 32);
-		getContentPane().add(btnRegistrar);
+		btnRegistrar.addActionListener(this);
+		btnRegistrar.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnRegistrar.setBounds(515, 422, 175, 36);
+		getContentPane().add(btnRegistrar);	
 		
-
+		lblNewLabel_11 = new JLabel("Precio de servicio");
+		lblNewLabel_11.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_11.setBounds(385, 380, 120, 14);
+		getContentPane().add(lblNewLabel_11);
+		
+		txtPrecio = new JTextField();
+		txtPrecio.setColumns(10);
+		txtPrecio.setBounds(515, 375, 86, 26);
+		getContentPane().add(txtPrecio);
 
 	}
 
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnRegistrar) {
+			actionPerformedBtnRegistrar(e);
+		}
+	}
+	protected void actionPerformedBtnRegistrar(ActionEvent e) {	
+		
+		ClaseRegistro clr = new ClaseRegistro(leerDNI(), leerNombre(), leerTelefono(), leerCorreo(), leerTipDeEquipo(), leerMarcaElegida(),leerNSerie(), leerFechaDeIngreso(),leerFechaDeEntrega(), leerPrecio());
+		
+		arl.adicionar(clr);
+		listar();
+		limpieza();
+		scp.setVisible(true);
+	  
+	}
+	
+	ArregloClientes arl = new ArregloClientes();
+	void listar() {
+		scp.modelo.setRowCount(0);
+   		for (int i = 0; i < arl.tamanio(); i++) {
+			Object[] fila= {arl.obtener(i).getDni(),
+							arl.obtener(i).getNombre(),
+							arl.obtener(i).getTelefono(),
+							arl.obtener(i).getCorreo(),
+							arl.obtener(i).equipoelegido(i),
+							arl.obtener(i).marcaElegida(i),
+							arl.obtener(i).getNumeroDeSerie(),
+							arl.obtener(i).getFechaDeIngreso(),
+							arl.obtener(i).getFechaDeEntrega(),
+							arl.obtener(i).getPrecio(),
+							"Pendiente"
+			};
+			scp.modelo.addRow(fila);
+		}
+	}
+	
+	//limpiar cajas de texto
+	void limpieza() {
+		txtDni.setText("");
+		txtNombreCompleto.setText("");
+		txtTelefono.setText("");
+		txtCorreo.setText("");
+		txtNumSerie.setText("");
+		txtFechaEntrega.setText("");
+		txtPrecio.setText("");
+		
+	}
+	
 
+	int leerDNI() {
+		return Integer.parseInt(txtDni.getText().trim());
+	}
+	
+	String leerNombre() {
+		return txtNombreCompleto.getText().trim();
+	}
+	
+	int leerTelefono() {
+		return Integer.parseInt(txtTelefono.getText().trim());
+	}
+	
+	int leerTipDeEquipo() {
+		return cmbTipoDeEquipo.getSelectedIndex();
+	}
+	
+	int leerMarcaElegida() {
+		return cmbMarca.getSelectedIndex();
+		
+	}
+	
+	String leerCorreo() {
+		return txtCorreo.getText().trim();
+	}
+	
+	String leerNSerie() {
+		return txtNumSerie.getText();
+	}
+	
+	String leerFechaDeIngreso() {
+		String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		txtFechaIngreso.setText(fecha);
+		return fecha;
+	}
+	
+	String leerFechaDeEntrega() {
+		return txtFechaEntrega.getText();
+	}
+	double leerPrecio() {
+		return Double.parseDouble(txtPrecio.getText());
+	}
 }
