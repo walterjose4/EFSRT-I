@@ -221,46 +221,46 @@ public class RegistroClientes extends JFrame implements ActionListener {
 		}
 	}
 	protected void actionPerformedBtnRegistrar(ActionEvent e) {
-	    // 1. Validate DNI
+	    // 1. Validar DNI
 	    String dniStr = txtDni.getText().trim();
 	    if (dniStr.isEmpty() || !dniStr.matches("\\d{8}")) {
 	        JOptionPane.showMessageDialog(this, "Ingrese un DNI válido de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtDni.requestFocus();
 	        return;
 	    }
-	    // 2. Validate Nombre
+	    // 2. Validar Nombre
 	    if (txtNombreCompleto.getText().trim().isEmpty()) {
 	        JOptionPane.showMessageDialog(this, "Ingrese el nombre completo.", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtNombreCompleto.requestFocus();
 	        return;
 	    }
-	    // 3. Validate Teléfono
+	    // 3. Validar Teléfono
 	    String telefonoStr = txtTelefono.getText().trim();
 	    if (telefonoStr.isEmpty() || !telefonoStr.matches("\\d{9}")) {
 	        JOptionPane.showMessageDialog(this, "Ingrese un número de teléfono válido (9 dígitos).", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtTelefono.requestFocus();
 	        return;
 	    }
-	    // 4. Validate Correo
+	    // 4. Validar Correo
 	    String correo = txtCorreo.getText().trim();
 	    if (correo.isEmpty() || !correo.matches("^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
 	        JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido.", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtCorreo.requestFocus();
 	        return;
 	    }
-	    // 5. Validate Número de serie
+	    // 5. Validar Número de serie
 	    if (txtNumSerie.getText().trim().isEmpty()) {
 	        JOptionPane.showMessageDialog(this, "Ingrese el número de serie.", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtNumSerie.requestFocus();
 	        return;
 	    }
-	    // 6. Validate Fecha de entrega
+	    // 6. Validar Fecha de entrega
 	    if (txtFechaEntrega.getText().trim().isEmpty()) {
 	        JOptionPane.showMessageDialog(this, "Ingrese la fecha de entrega.", "Error", JOptionPane.ERROR_MESSAGE);
 	        txtFechaEntrega.requestFocus();
 	        return;
 	    }
-	    // 7. Validate Precio
+	    // 7. Validar Precio
 	    String precioStr = txtPrecio.getText().trim();
 	    double precio = 0;
 	    try {
@@ -272,7 +272,7 @@ public class RegistroClientes extends JFrame implements ActionListener {
 	        return;
 	    }
 
-	    // If all validations pass, proceed to register
+	    // Si pasan todas las validaciones, proceder a registrar
 	    ClaseRegistro clr = new ClaseRegistro(
 	        Integer.parseInt(dniStr),
 	        txtNombreCompleto.getText().trim(),
