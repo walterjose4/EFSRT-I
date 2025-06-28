@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 import javax.swing.JTextField;
@@ -218,16 +220,77 @@ public class RegistroClientes extends JFrame implements ActionListener {
 			actionPerformedBtnRegistrar(e);
 		}
 	}
-	protected void actionPerformedBtnRegistrar(ActionEvent e) {	
-		
-		ClaseRegistro clr = new ClaseRegistro(leerDNI(), leerNombre(), leerTelefono(), leerCorreo(), leerTipDeEquipo(), leerMarcaElegida(),leerNSerie(), leerFechaDeIngreso(),leerFechaDeEntrega(), leerPrecio());
-		
-		arl.adicionar(clr);
-		listar();
-		limpieza();
-		scp.setVisible(true);
-	  
+	protected void actionPerformedBtnRegistrar(ActionEvent e) {
+	    // 1. Validate DNI
+	    String dniStr = txtDni.getText().trim();
+	    if (dniStr.isEmpty() || !dniStr.matches("\\d{8}")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un DNI válido de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtDni.requestFocus();
+	        return;
+	    }
+	    // 2. Validate Nombre
+	    if (txtNombreCompleto.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el nombre completo.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtNombreCompleto.requestFocus();
+	        return;
+	    }
+	    // 3. Validate Teléfono
+	    String telefonoStr = txtTelefono.getText().trim();
+	    if (telefonoStr.isEmpty() || !telefonoStr.matches("\\d{9}")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un número de teléfono válido (9 dígitos).", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtTelefono.requestFocus();
+	        return;
+	    }
+	    // 4. Validate Correo
+	    String correo = txtCorreo.getText().trim();
+	    if (correo.isEmpty() || !correo.matches("^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtCorreo.requestFocus();
+	        return;
+	    }
+	    // 5. Validate Número de serie
+	    if (txtNumSerie.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese el número de serie.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtNumSerie.requestFocus();
+	        return;
+	    }
+	    // 6. Validate Fecha de entrega
+	    if (txtFechaEntrega.getText().trim().isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese la fecha de entrega.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtFechaEntrega.requestFocus();
+	        return;
+	    }
+	    // 7. Validate Precio
+	    String precioStr = txtPrecio.getText().trim();
+	    double precio = 0;
+	    try {
+	        precio = Double.parseDouble(precioStr);
+	        if (precio <= 0) throw new Exception();
+	    } catch (Exception ex) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un precio válido (mayor a cero).", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtPrecio.requestFocus();
+	        return;
+	    }
+
+	    // If all validations pass, proceed to register
+	    ClaseRegistro clr = new ClaseRegistro(
+	        Integer.parseInt(dniStr),
+	        txtNombreCompleto.getText().trim(),
+	        Integer.parseInt(telefonoStr),
+	        correo,
+	        leerTipDeEquipo(),
+	        leerMarcaElegida(),
+	        txtNumSerie.getText().trim(),
+	        leerFechaDeIngreso(),
+	        txtFechaEntrega.getText().trim(),
+	        precio
+	    );
+	    arl.adicionar(clr);
+	    listar();
+	    limpieza();
+	    scp.setVisible(true);
 	}
+
 	
 	ArregloClientes arl = new ArregloClientes();
 	void listar() {
