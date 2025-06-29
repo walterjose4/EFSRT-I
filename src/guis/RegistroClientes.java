@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 import javax.swing.JTextField;
@@ -20,6 +22,7 @@ import javax.swing.JComboBox;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
@@ -218,16 +221,127 @@ public class RegistroClientes extends JFrame implements ActionListener {
 			actionPerformedBtnRegistrar(e);
 		}
 	}
-	protected void actionPerformedBtnRegistrar(ActionEvent e) {	
-		
-		ClaseRegistro clr = new ClaseRegistro(leerDNI(), leerNombre(), leerTelefono(), leerCorreo(), leerTipDeEquipo(), leerMarcaElegida(),leerNSerie(), leerFechaDeIngreso(),leerFechaDeEntrega(), leerPrecio());
-		
-		arl.adicionar(clr);
-		listar();
-		limpieza();
-		scp.setVisible(true);
-	  
+	protected void actionPerformedBtnRegistrar(ActionEvent e) {
+	    // 1. Validar DNI
+	    String dniStr = txtDni.getText().trim();
+	    if (dniStr.isEmpty() || !dniStr.matches("\\d{8}")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un DNI válido de 8 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtDni.requestFocus();
+	        return;
+	    }
+	    String nombre = txtNombreCompleto.getText().trim();
+
+	 // Al menos 3 caracteres, solo letras y espacios, y al menos un espacio entre palabras
+	 if (nombre.length() < 3) {
+	     JOptionPane.showMessageDialog(this,
+	         "El nombre debe tener al menos 3 caracteres.",
+	         "Error", JOptionPane.ERROR_MESSAGE);
+	     txtNombreCompleto.requestFocus();
+	     return;
+	 }
+
+	 // Solo letras y espacios, incluyendo acentos
+	 if (!nombre.matches("^[\\p{L} ]+$")) {
+	     JOptionPane.showMessageDialog(this,
+	         "El nombre solo puede contener letras y espacios.",
+	         "Error", JOptionPane.ERROR_MESSAGE);
+	     txtNombreCompleto.requestFocus();
+	     return;
+	 }
+
+	 // (Opcional) Forzar al menos dos palabras (nombre y apellido)
+	 if (!nombre.trim().contains(" ")) {
+	     JOptionPane.showMessageDialog(this,
+	         "Debe ingresar al menos nombre y apellido.",
+	         "Error", JOptionPane.ERROR_MESSAGE);
+	     txtNombreCompleto.requestFocus();
+	     return;
+	 }
+
+	    // 3. Validar Teléfono
+	    String telefonoStr = txtTelefono.getText().trim();
+	    if (telefonoStr.isEmpty() || !telefonoStr.matches("\\d{9}")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un número de teléfono válido (9 dígitos).", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtTelefono.requestFocus();
+	        return;
+	    }
+	    // 4. Validar Correo
+	    String correo = txtCorreo.getText().trim();
+	    if (correo.isEmpty() || !correo.matches("^[\\w-.]+@[\\w-]+\\.[a-zA-Z]{2,}$")) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un correo electrónico válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtCorreo.requestFocus();
+	        return;
+	    }
+	    // 5. Validar Número de serie
+	    String numSerie = txtNumSerie.getText().trim();
+	    if (numSerie.isEmpty() || !numSerie.matches("^[a-zA-Z0-9\\-_]{10,17}$")) {
+	        JOptionPane.showMessageDialog(this, "El número de serie debe tener entre 10 y 17 caracteres y solo puede contener letras, números, guiones o guiones bajos.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtNumSerie.requestFocus();
+	        return;
+	    }
+	 // Fecha de ingreso
+	    String fechaIngresoStr = leerFechaDeIngreso();
+
+	    // Fecha de entrega
+	    String fechaEntregaStr = txtFechaEntrega.getText().trim();
+
+	    if (fechaEntregaStr.isEmpty()) {
+	        JOptionPane.showMessageDialog(this, "Ingrese la fecha de entrega.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtFechaEntrega.requestFocus();
+	        return;
+	    }
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    LocalDate fechaIngreso;
+	    LocalDate fechaEntrega;
+
+	    try {
+	        fechaIngreso = LocalDate.parse(fechaIngresoStr, formatter);
+	        fechaEntrega = LocalDate.parse(fechaEntregaStr, formatter);
+	    } catch (Exception ex) {
+	        JOptionPane.showMessageDialog(this, "Las fechas deben tener el formato dd/MM/yyyy y ser válidas.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtFechaEntrega.requestFocus();
+	        return;
+	    }
+
+	    // Comparar
+	    if (!fechaEntrega.isAfter(fechaIngreso)) {
+	        JOptionPane.showMessageDialog(this, "La fecha de entrega debe ser posterior a la fecha de ingreso.", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtFechaEntrega.requestFocus();
+	        return;
+	    }
+
+	    // 7. Validar Precio
+	    String precioStr = txtPrecio.getText().trim();
+	    double precio = 0;
+	    try {
+	        precio = Double.parseDouble(precioStr);
+	        if (precio <= 0) throw new Exception();
+	    } catch (Exception ex) {
+	        JOptionPane.showMessageDialog(this, "Ingrese un precio válido (mayor a cero).", "Error", JOptionPane.ERROR_MESSAGE);
+	        txtPrecio.requestFocus();
+	        return;
+	    }
+
+	    // Si pasan todas las validaciones, proceder a registrar
+	    ClaseRegistro clr = new ClaseRegistro(
+	    	    Integer.parseInt(dniStr),     
+	    	    nombre,                       
+	    	    Integer.parseInt(telefonoStr),
+	    	    correo,                       
+	    	    leerTipDeEquipo(),            
+	    	    leerMarcaElegida(),           
+	    	    numSerie,                     
+	    	    leerFechaDeIngreso(),         
+	    	    fechaEntregaStr,              
+	    	    precio                       
+	    	);
+	    arl.adicionar(clr);
+	    listar();
+	    limpieza();
+	    scp.setVisible(true);
 	}
+
 	
 	ArregloClientes arl = new ArregloClientes();
 	void listar() {
@@ -261,46 +375,17 @@ public class RegistroClientes extends JFrame implements ActionListener {
 		
 	}
 	
-
-	int leerDNI() {
-		return Integer.parseInt(txtDni.getText().trim());
-	}
-	
-	String leerNombre() {
-		return txtNombreCompleto.getText().trim();
-	}
-	
-	int leerTelefono() {
-		return Integer.parseInt(txtTelefono.getText().trim());
-	}
-	
 	int leerTipDeEquipo() {
 		return cmbTipoDeEquipo.getSelectedIndex();
 	}
-	
+
 	int leerMarcaElegida() {
 		return cmbMarca.getSelectedIndex();
-		
 	}
-	
-	String leerCorreo() {
-		return txtCorreo.getText().trim();
-	}
-	
-	String leerNSerie() {
-		return txtNumSerie.getText();
-	}
-	
+
 	String leerFechaDeIngreso() {
 		String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		txtFechaIngreso.setText(fecha);
 		return fecha;
-	}
-	
-	String leerFechaDeEntrega() {
-		return txtFechaEntrega.getText();
-	}
-	double leerPrecio() {
-		return Double.parseDouble(txtPrecio.getText());
 	}
 }
